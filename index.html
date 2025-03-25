@@ -5,6 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Hóa Đơn Bán Hàng</title>
         <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&family=Comfortaa:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
         <style>
             :root {
                 --primary-color: #2c3e50;
@@ -15,7 +19,7 @@
             }
 
             body {
-                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                font-family: "Comfortaa", cursive;
                 max-width: 1000px;
                 margin: 0 auto;
                 padding: 20px;
@@ -55,9 +59,10 @@
 
             .form-group label {
                 display: block;
-                margin-bottom: 5px;
+                margin-bottom: 8px;
                 color: var(--primary-color);
-                font-weight: 600;
+                font-weight: 700;
+                letter-spacing: 0.3px;
             }
 
             input[type="text"],
@@ -69,6 +74,8 @@
                 border-radius: 4px;
                 margin-bottom: 10px;
                 box-sizing: border-box;
+                font-family: "Comfortaa", cursive;
+                font-size: 14px;
             }
 
             table {
@@ -88,6 +95,7 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
+                letter-spacing: 0.5px;
             }
 
             td {
@@ -127,6 +135,7 @@
                 font-weight: bold;
                 color: var(--primary-color);
                 font-size: 14px;
+                letter-spacing: 0.3px;
             }
 
             .totals .value {
@@ -141,6 +150,7 @@
                 margin-top: 5px;
                 padding-top: 5px;
                 border-top: 1px dashed var(--gray-dark);
+                letter-spacing: 0.5px;
             }
 
             .grand-total .label,
@@ -153,6 +163,7 @@
                 margin-top: 10px;
                 color: var(--primary-color);
                 font-size: 13px;
+                line-height: 1.5;
             }
 
             .thank-you {
@@ -173,6 +184,7 @@
                 cursor: pointer;
                 margin: 5px;
                 transition: background-color 0.3s;
+                letter-spacing: 0.5px;
             }
 
             button:hover {
@@ -201,8 +213,9 @@
             }
 
             .company-info h2 {
-                font-size: 18px;
+                font-size: 20px;
                 margin: 0 0 5px 0;
+                letter-spacing: 0.5px;
             }
 
             .company-info p {
@@ -235,7 +248,8 @@
                 color: var(--primary-color);
                 margin: 10px 0;
                 text-align: center;
-                font-size: 18px;
+                font-size: 22px;
+                letter-spacing: 1px;
             }
 
             .customer-info {
@@ -299,7 +313,7 @@
                 }
 
                 .company-info h2 {
-                    font-size: 16px;
+                    font-size: 18px;
                 }
 
                 .company-info p,
@@ -308,7 +322,7 @@
                 }
 
                 .invoice-title {
-                    font-size: 16px;
+                    font-size: 18px;
                 }
 
                 table {
@@ -387,6 +401,80 @@
             .preview-btn {
                 background-color: var(--secondary-color);
                 margin-bottom: 10px;
+            }
+
+            /* Áp dụng font Lexend cho các phần in đậm */
+            .company-info h2,
+            .invoice-title,
+            .bank-info .bank-title,
+            th,
+            .totals .label,
+            .grand-total,
+            .customer-info strong,
+            #invoiceDetails strong,
+            .form-group label,
+            button,
+            .money-text strong {
+                font-family: "Lexend", sans-serif;
+                font-weight: 700;
+            }
+
+            /* Điều chỉnh font-weight cho các phần còn lại */
+            .company-info p,
+            .bank-info p,
+            td,
+            .customer-info p,
+            #invoiceDetails p,
+            .totals .value:not(.grand-total .value),
+            .money-text,
+            .thank-you {
+                font-family: "Comfortaa", cursive;
+                font-weight: 400;
+            }
+
+            /* Điều chỉnh một số style để phù hợp với font mới */
+            .company-info h2 {
+                font-size: 20px;
+                letter-spacing: 0.5px;
+            }
+
+            .invoice-title {
+                font-size: 22px;
+                letter-spacing: 1px;
+            }
+
+            th {
+                letter-spacing: 0.5px;
+            }
+
+            .totals .label {
+                letter-spacing: 0.3px;
+            }
+
+            .grand-total {
+                letter-spacing: 0.5px;
+            }
+
+            /* Điều chỉnh style cho form nhập liệu */
+            .form-group label {
+                margin-bottom: 8px;
+                letter-spacing: 0.3px;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            input[type="date"] {
+                font-family: "Comfortaa", cursive;
+                font-size: 14px;
+            }
+
+            button {
+                letter-spacing: 0.5px;
+            }
+
+            /* Điều chỉnh style cho phần bằng chữ */
+            .money-text {
+                line-height: 1.5;
             }
         </style>
     </head>
@@ -725,15 +813,20 @@
 
                 // Cập nhật thông tin khách hàng
                 const customerInfo = document.getElementById("customerInfo");
+                const customerName =
+                    document.getElementById("customerName").value;
+                const address = document.getElementById("address").value;
+                const phone = document.getElementById("phone").value;
+
                 customerInfo.innerHTML = `
                     <p><strong>Khách hàng:</strong> ${
-                        document.getElementById("customerName").value
+                        customerName || "..........................."
                     }</p>
                     <p><strong>Địa chỉ:</strong> ${
-                        document.getElementById("address").value
+                        address || "..........................."
                     }</p>
                     <p><strong>Số điện thoại:</strong> ${
-                        document.getElementById("phone").value
+                        phone || "..........................."
                     }</p>
                 `;
 
@@ -743,18 +836,28 @@
                 let subtotal = 0;
                 let totalQty = 0;
 
-                products.forEach((product, index) => {
-                    const row = productList.insertRow();
-                    row.innerHTML = `
-                        <td style="text-align: center;">${index + 1}</td>
-                        <td class="product-name-cell">${product.name}</td>
-                        <td class="number-cell">${product.quantity}</td>
-                        <td class="number-cell">${product.price.toLocaleString()}đ</td>
-                        <td class="number-cell">${product.total.toLocaleString()}đ</td>
+                if (products.length === 0) {
+                    // Thêm một dòng trống nếu không có sản phẩm
+                    const emptyRow = productList.insertRow();
+                    emptyRow.innerHTML = `
+                        <td colspan="5" style="text-align: center; padding: 20px;">
+                            Chưa có sản phẩm nào
+                        </td>
                     `;
-                    subtotal += product.total;
-                    totalQty += product.quantity;
-                });
+                } else {
+                    products.forEach((product, index) => {
+                        const row = productList.insertRow();
+                        row.innerHTML = `
+                            <td style="text-align: center;">${index + 1}</td>
+                            <td class="product-name-cell">${product.name}</td>
+                            <td class="number-cell">${product.quantity}</td>
+                            <td class="number-cell">${product.price.toLocaleString()}đ</td>
+                            <td class="number-cell">${product.total.toLocaleString()}đ</td>
+                        `;
+                        subtotal += product.total;
+                        totalQty += product.quantity;
+                    });
+                }
 
                 // Lấy phí ship và chiết khấu
                 const shippingFee =
@@ -779,7 +882,9 @@
 
                 // Cập nhật số tiền bằng chữ
                 document.getElementById("moneyInWords").textContent =
-                    "Bằng chữ: " + numberToWords(grandTotal);
+                    grandTotal > 0
+                        ? "Bằng chữ: " + numberToWords(grandTotal)
+                        : "Bằng chữ: .............................";
             }
 
             function clearProductInputs() {
@@ -849,6 +954,14 @@
                             document.getElementById("invoiceNumber").value
                         }.jpg`;
                         link.click();
+
+                        // Xóa form sau khi xuất thành công
+                        setTimeout(() => {
+                            clearForm();
+                            alert(
+                                "Đã xuất hóa đơn thành công và làm mới thông tin!"
+                            );
+                        }, 500);
                     })
                     .catch((err) => {
                         console.error("Có lỗi khi tạo hình ảnh: ", err);
@@ -875,6 +988,32 @@
                     });
                 };
                 container.insertBefore(previewBtn, container.firstChild);
+            }
+
+            // Thêm hàm để xóa form
+            function clearForm() {
+                // Xóa thông tin khách hàng
+                document.getElementById("customerName").value = "";
+                document.getElementById("address").value = "";
+                document.getElementById("phone").value = "";
+
+                // Xóa thông tin sản phẩm
+                document.getElementById("productName").value = "";
+                document.getElementById("quantity").value = "";
+                document.getElementById("price").value = "";
+
+                // Xóa phí ship và chiết khấu
+                document.getElementById("shippingFee").value = "0";
+                document.getElementById("discount").value = "0";
+
+                // Reset mảng sản phẩm
+                products = [];
+
+                // Cập nhật lại hiển thị
+                updateInvoice();
+
+                // Tạo mã hóa đơn mới
+                generateInvoiceNumber();
             }
         </script>
     </body>
