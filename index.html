@@ -280,6 +280,114 @@
                 text-align: center;
                 margin-top: 20px;
             }
+
+            /* Responsive styles */
+            @media screen and (max-width: 768px) {
+                .container {
+                    flex-direction: column;
+                    padding: 10px;
+                }
+
+                .invoice-form,
+                .invoice-container {
+                    width: 100%;
+                }
+
+                .invoice {
+                    padding: 10px;
+                    font-size: 12px;
+                }
+
+                .company-info h2 {
+                    font-size: 16px;
+                }
+
+                .company-info p,
+                .bank-info p {
+                    font-size: 11px;
+                }
+
+                .invoice-title {
+                    font-size: 16px;
+                }
+
+                table {
+                    display: block;
+                    overflow-x: auto;
+                    white-space: nowrap;
+                }
+
+                th,
+                td {
+                    padding: 6px;
+                    font-size: 12px;
+                }
+
+                .totals .label {
+                    width: 120px;
+                    font-size: 12px;
+                }
+
+                .totals .value {
+                    width: 100px;
+                    font-size: 12px;
+                }
+
+                .grand-total .label,
+                .grand-total .value {
+                    font-size: 14px;
+                }
+
+                .money-text {
+                    font-size: 11px;
+                }
+
+                .thank-you {
+                    font-size: 12px;
+                }
+
+                /* Ẩn preview trên mobile */
+                .preview-area {
+                    display: none;
+                }
+            }
+
+            /* Thêm style cho mobile-preview */
+            .mobile-preview {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 1000;
+                overflow: auto;
+            }
+
+            .mobile-preview img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+
+            .mobile-preview .close-btn {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: white;
+                color: black;
+                border: none;
+                padding: 8px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            /* Thêm style cho nút xem trước */
+            .preview-btn {
+                background-color: var(--secondary-color);
+                margin-bottom: 10px;
+            }
         </style>
     </head>
     <body>
@@ -550,6 +658,11 @@
                 const today = new Date().toISOString().split("T")[0];
                 document.getElementById("invoiceDate").value = today;
                 updateInvoiceDisplay();
+
+                // Thêm nút xem trước cho mobile
+                if (window.innerWidth <= 768) {
+                    addPreviewButton();
+                }
             };
 
             function generateInvoiceNumber() {
@@ -675,42 +788,93 @@
                 document.getElementById("price").value = "";
             }
 
+            function showMobilePreview(imgData) {
+                // Tạo và hiển thị preview cho mobile
+                const mobilePreview = document.createElement("div");
+                mobilePreview.className = "mobile-preview";
+
+                const closeBtn = document.createElement("button");
+                closeBtn.className = "close-btn";
+                closeBtn.textContent = "Đóng";
+                closeBtn.onclick = () => mobilePreview.remove();
+
+                const img = document.createElement("img");
+                img.src = imgData;
+
+                mobilePreview.appendChild(closeBtn);
+                mobilePreview.appendChild(img);
+                document.body.appendChild(mobilePreview);
+            }
+
             function exportToJPG() {
-                // Thiết lập các tùy chọn cho html2canvas
+                // Lưu kích thước gốc của invoice
+                const invoice = document.getElementById("invoice");
+                const originalWidth = invoice.style.width;
+
+                // Đặt kích thước cố định cho việc xuất hình ảnh
+                invoice.style.width = "800px";
+
                 const options = {
-                    scale: 2, // Tăng độ phân giải để hình ảnh rõ nét hơn
-                    useCORS: true, // Cho phép tải tài nguyên từ các domain khác
-                    backgroundColor: "#ffffff", // Đặt màu nền trắng
-                    logging: false, // Tắt log
-                    allowTaint: true, // Cho phép vẽ hình ảnh từ các nguồn khác
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: "#ffffff",
+                    logging: false,
+                    allowTaint: true,
+                    windowWidth: 800,
+                    windowHeight: 1200,
                 };
 
-                // Chuyển đổi phần tử HTML thành canvas
-                html2canvas(document.getElementById("invoice"), options)
+                html2canvas(invoice, options)
                     .then((canvas) => {
-                        // Lấy dữ liệu URL hình ảnh từ canvas
                         const imgData = canvas.toDataURL("image/jpeg", 1.0);
 
-                        // Tạo thẻ link ẩn để tải file
-                        const link = document.createElement("a");
-                        link.href = imgData;
-                        link.download = `hoa-don-${
-                            document.getElementById("invoiceNumber").value
-                        }.jpg`;
+                        // Khôi phục kích thước gốc
+                        invoice.style.width = originalWidth;
 
-                        // Hiển thị preview hình ảnh
+                        // Hiển thị preview trên mobile
+                        if (window.innerWidth <= 768) {
+                            showMobilePreview(imgData);
+                        }
+
+                        // Hiển thị preview trên desktop
                         const imageOutput =
                             document.getElementById("imageOutput");
                         imageOutput.src = imgData;
                         imageOutput.style.display = "block";
 
-                        // Tự động click để tải xuống
+                        // Tạo link tải xuống
+                        const link = document.createElement("a");
+                        link.href = imgData;
+                        link.download = `hoa-don-${
+                            document.getElementById("invoiceNumber").value
+                        }.jpg`;
                         link.click();
                     })
                     .catch((err) => {
                         console.error("Có lỗi khi tạo hình ảnh: ", err);
                         alert("Có lỗi khi tạo hình ảnh. Vui lòng thử lại!");
                     });
+            }
+
+            function addPreviewButton() {
+                const container = document.querySelector(".invoice-container");
+                const previewBtn = document.createElement("button");
+                previewBtn.className = "preview-btn";
+                previewBtn.textContent = "Xem trước";
+                previewBtn.onclick = () => {
+                    const invoice = document.getElementById("invoice");
+                    html2canvas(invoice, {
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: "#ffffff",
+                        logging: false,
+                        allowTaint: true,
+                    }).then((canvas) => {
+                        const imgData = canvas.toDataURL("image/jpeg", 1.0);
+                        showMobilePreview(imgData);
+                    });
+                };
+                container.insertBefore(previewBtn, container.firstChild);
             }
         </script>
     </body>
