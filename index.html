@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Hóa Đơn Bán Hàng</title>
+        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+        <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #3498db;
+                --accent-color: #e74c3c;
+                --gray-light: #ecf0f1;
+                --gray-dark: #7f8c8d;
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f5f6fa;
+            }
+
+            .container {
+                display: flex;
+                gap: 20px;
+            }
+
+            .invoice-form {
+                flex: 1;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .invoice-container {
+                position: relative;
+                flex: 1;
+            }
+
+            .invoice {
+                width: 100%;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                box-sizing: border-box;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                color: var(--primary-color);
+                font-weight: 600;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            input[type="date"] {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                margin-bottom: 10px;
+                box-sizing: border-box;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 15px 0;
+                background: white;
+            }
+
+            th {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 8px;
+                text-align: left;
+                font-size: 14px;
+            }
+
+            td {
+                padding: 8px;
+                border-bottom: 1px solid #ddd;
+                font-size: 14px;
+            }
+
+            .totals {
+                width: 100%;
+                text-align: right;
+                margin-top: 15px;
+                padding: 8px;
+                border-top: 2px solid var(--primary-color);
+            }
+
+            .totals .item {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 5px;
+            }
+
+            .totals .label {
+                width: 150px;
+                font-weight: bold;
+                color: var(--primary-color);
+                font-size: 14px;
+            }
+
+            .totals .value {
+                width: 150px;
+                text-align: right;
+                font-size: 14px;
+            }
+
+            .grand-total {
+                font-weight: bold;
+                color: var(--accent-color);
+                margin-top: 5px;
+                padding-top: 5px;
+                border-top: 1px dashed var(--gray-dark);
+            }
+
+            .grand-total .label,
+            .grand-total .value {
+                font-size: 16px;
+            }
+
+            .money-text {
+                font-style: italic;
+                margin-top: 10px;
+                color: var(--primary-color);
+                font-size: 13px;
+            }
+
+            .thank-you {
+                text-align: center;
+                margin-top: 20px;
+                font-weight: bold;
+                color: var(--accent-color);
+                font-size: 14px;
+                padding-bottom: 10px;
+            }
+
+            button {
+                padding: 10px 20px;
+                background-color: var(--secondary-color);
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 5px;
+                transition: background-color 0.3s;
+            }
+
+            button:hover {
+                background-color: #2980b9;
+            }
+
+            .export-btn {
+                background-color: var(--accent-color);
+            }
+
+            .export-btn:hover {
+                background-color: #c0392b;
+            }
+
+            .invoice-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: start;
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid var(--gray-light);
+            }
+
+            .company-info {
+                text-align: right;
+            }
+
+            .company-info h2 {
+                font-size: 18px;
+                margin: 0 0 5px 0;
+            }
+
+            .company-info p {
+                font-size: 12px;
+                margin: 2px 0;
+                color: var(--gray-dark);
+            }
+
+            .bank-info {
+                text-align: right;
+                margin-top: 8px;
+                padding-top: 8px;
+                border-top: 1px dashed var(--gray-light);
+            }
+
+            .bank-info .bank-title {
+                font-weight: bold;
+                color: var(--primary-color);
+                margin-bottom: 3px;
+                font-size: 12px;
+            }
+
+            .bank-info p {
+                font-size: 12px;
+                margin: 2px 0;
+                color: var(--gray-dark);
+            }
+
+            .invoice-title {
+                color: var(--primary-color);
+                margin: 10px 0;
+                text-align: center;
+                font-size: 18px;
+            }
+
+            .customer-info {
+                background-color: var(--gray-light);
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+                font-size: 13px;
+            }
+
+            #invoiceDetails {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            #invoiceDetails p {
+                margin: 3px 0;
+            }
+
+            .product-form {
+                background-color: var(--gray-light);
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+
+            .additional-info {
+                background-color: var(--gray-light);
+                padding: 15px;
+                border-radius: 5px;
+                margin-top: 20px;
+            }
+
+            #imageOutput {
+                display: none;
+                max-width: 100%;
+                margin-top: 20px;
+                border: 1px solid #ddd;
+            }
+
+            .preview-area {
+                text-align: center;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="invoice-form">
+                <h2>Thông tin hóa đơn</h2>
+                <div class="form-group">
+                    <label>Mã hóa đơn:</label>
+                    <input type="text" id="invoiceNumber" readonly />
+                </div>
+                <div class="form-group">
+                    <label>Ngày lập:</label>
+                    <input type="date" id="invoiceDate" />
+                </div>
+                <div class="form-group">
+                    <label>Tên khách hàng:</label>
+                    <input type="text" id="customerName" />
+                </div>
+                <div class="form-group">
+                    <label>Địa chỉ:</label>
+                    <input type="text" id="address" />
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại:</label>
+                    <input type="text" id="phone" />
+                </div>
+
+                <div class="product-form">
+                    <h3>Thêm sản phẩm</h3>
+                    <div class="form-group">
+                        <label>Tên sản phẩm:</label>
+                        <input type="text" id="productName" />
+                    </div>
+                    <div class="form-group">
+                        <label>Số lượng:</label>
+                        <input type="number" id="quantity" min="1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Đơn giá:</label>
+                        <input type="number" id="price" min="0" />
+                    </div>
+                    <button onclick="addProduct()">Thêm sản phẩm</button>
+                </div>
+
+                <div class="additional-info">
+                    <h3>Thông tin thanh toán</h3>
+                    <div class="form-group">
+                        <label>Phí giao hàng:</label>
+                        <input
+                            type="number"
+                            id="shippingFee"
+                            min="0"
+                            value="0"
+                            onchange="updateInvoice()"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label>Chiết khấu:</label>
+                        <input
+                            type="number"
+                            id="discount"
+                            min="0"
+                            value="0"
+                            onchange="updateInvoice()"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="invoice-container">
+                <div id="invoice" class="invoice">
+                    <div class="invoice-header">
+                        <div>
+                            <!-- Ảnh logo có thể thêm vào đây nếu cần -->
+                        </div>
+                        <div class="company-info">
+                            <h2>CÔNG TY TNHH ABC</h2>
+                            <p>123 Đường ABC, Quận XYZ</p>
+                            <p>ĐT: 0123456789</p>
+
+                            <div class="bank-info">
+                                <div class="bank-title">
+                                    THÔNG TIN THANH TOÁN
+                                </div>
+                                <p>Ngân hàng: VIETCOMBANK</p>
+                                <p>STK: 1234567890</p>
+                                <p>Chủ TK: CÔNG TY TNHH ABC</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h1 class="invoice-title">HÓA ĐƠN BÁN HÀNG</h1>
+                    <div id="invoiceDetails">
+                        <p>
+                            <strong>Mã HĐ:</strong>
+                            <span id="displayInvoiceNumber"></span> |
+                            <strong>Ngày lập:</strong>
+                            <span id="displayInvoiceDate"></span>
+                        </p>
+                    </div>
+                    <div id="customerInfo" class="customer-info"></div>
+                    <table id="productTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%">STT</th>
+                                <th style="width: 45%">Tên sản phẩm</th>
+                                <th style="width: 15%">Số lượng</th>
+                                <th style="width: 15%">Đơn giá</th>
+                                <th style="width: 20%">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productList"></tbody>
+                    </table>
+                    <div class="totals" id="totalsSection">
+                        <div class="item">
+                            <div class="label">Tổng số lượng:</div>
+                            <div class="value" id="totalQuantity">0</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">Tổng tiền hàng:</div>
+                            <div class="value" id="subtotal">0đ</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">Phí giao hàng:</div>
+                            <div class="value" id="shipping">0đ</div>
+                        </div>
+                        <div class="item">
+                            <div class="label">Chiết khấu:</div>
+                            <div class="value" id="discountDisplay">0đ</div>
+                        </div>
+                        <div class="item grand-total">
+                            <div class="label">Tổng thanh toán:</div>
+                            <div class="value" id="totalAmount">0đ</div>
+                        </div>
+                    </div>
+                    <div class="money-text" id="moneyInWords"></div>
+                    <div class="thank-you">Cảm ơn và hẹn gặp lại !!!</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px">
+            <button class="export-btn" onclick="exportToJPG()">Xuất JPG</button>
+        </div>
+
+        <div class="preview-area">
+            <img id="imageOutput" src="" alt="Hóa đơn JPG" />
+        </div>
+
+        <script>
+            let products = [];
+
+            // Hàm chuyển số thành chữ tiếng Việt
+            function numberToWords(number) {
+                const units = [
+                    "",
+                    "một",
+                    "hai",
+                    "ba",
+                    "bốn",
+                    "năm",
+                    "sáu",
+                    "bảy",
+                    "tám",
+                    "chín",
+                ];
+                const teens = [
+                    "",
+                    "mười một",
+                    "mười hai",
+                    "mười ba",
+                    "mười bốn",
+                    "mười lăm",
+                    "mười sáu",
+                    "mười bảy",
+                    "mười tám",
+                    "mười chín",
+                ];
+                const tens = [
+                    "",
+                    "mười",
+                    "hai mươi",
+                    "ba mươi",
+                    "bốn mươi",
+                    "năm mươi",
+                    "sáu mươi",
+                    "bảy mươi",
+                    "tám mươi",
+                    "chín mươi",
+                ];
+
+                function readHundreds(num) {
+                    let result = "";
+                    let hundred = Math.floor(num / 100);
+                    let remainder = num % 100;
+
+                    if (hundred > 0) {
+                        result += units[hundred] + " trăm ";
+                    }
+
+                    if (remainder > 0) {
+                        if (remainder < 10 && hundred > 0) {
+                            result += "lẻ ";
+                        }
+
+                        if (remainder < 10) {
+                            result += units[remainder];
+                        } else if (remainder < 20) {
+                            result += teens[remainder - 10];
+                        } else {
+                            let ten = Math.floor(remainder / 10);
+                            let unit = remainder % 10;
+                            result += tens[ten];
+                            if (unit > 0) {
+                                if (unit === 1) {
+                                    result += " mốt";
+                                } else if (unit === 5) {
+                                    result += " lăm";
+                                } else {
+                                    result += " " + units[unit];
+                                }
+                            }
+                        }
+                    }
+                    return result;
+                }
+
+                if (number === 0) return "không";
+
+                // Xử lý số nguyên
+                let result = "";
+                let billion = Math.floor(number / 1000000000);
+                number %= 1000000000;
+                let million = Math.floor(number / 1000000);
+                number %= 1000000;
+                let thousand = Math.floor(number / 1000);
+                let remainder = number % 1000;
+
+                if (billion > 0) {
+                    result += readHundreds(billion) + " tỷ ";
+                }
+
+                if (million > 0) {
+                    result += readHundreds(million) + " triệu ";
+                }
+
+                if (thousand > 0) {
+                    result += readHundreds(thousand) + " nghìn ";
+                }
+
+                if (remainder > 0 || result === "") {
+                    result += readHundreds(remainder);
+                }
+
+                return result.trim() + " đồng";
+            }
+
+            // Tạo mã hóa đơn tự động khi trang được tải
+            window.onload = function () {
+                generateInvoiceNumber();
+                // Đặt ngày mặc định là ngày hiện tại
+                const today = new Date().toISOString().split("T")[0];
+                document.getElementById("invoiceDate").value = today;
+                updateInvoiceDisplay();
+            };
+
+            function generateInvoiceNumber() {
+                const date = new Date();
+                const year = date.getFullYear().toString().substr(-2);
+                const month = (date.getMonth() + 1).toString().padStart(2, "0");
+                const day = date.getDate().toString().padStart(2, "0");
+                const random = Math.floor(Math.random() * 1000)
+                    .toString()
+                    .padStart(3, "0");
+                const invoiceNumber = `HD${year}${month}${day}${random}`;
+                document.getElementById("invoiceNumber").value = invoiceNumber;
+            }
+
+            function updateInvoiceDisplay() {
+                const invoiceNumber =
+                    document.getElementById("invoiceNumber").value;
+                const invoiceDate =
+                    document.getElementById("invoiceDate").value;
+                document.getElementById("displayInvoiceNumber").textContent =
+                    invoiceNumber;
+
+                // Định dạng lại ngày tháng cho đẹp hơn
+                const formattedDate = new Date(invoiceDate).toLocaleDateString(
+                    "vi-VN",
+                    {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                    }
+                );
+                document.getElementById("displayInvoiceDate").textContent =
+                    formattedDate;
+            }
+
+            function addProduct() {
+                const productName =
+                    document.getElementById("productName").value;
+                const quantity = parseInt(
+                    document.getElementById("quantity").value
+                );
+                const price = parseFloat(
+                    document.getElementById("price").value
+                );
+
+                if (productName && quantity && price) {
+                    products.push({
+                        name: productName,
+                        quantity: quantity,
+                        price: price,
+                        total: quantity * price,
+                    });
+                    updateInvoice();
+                    clearProductInputs();
+                }
+            }
+
+            function updateInvoice() {
+                updateInvoiceDisplay();
+
+                // Cập nhật thông tin khách hàng
+                const customerInfo = document.getElementById("customerInfo");
+                customerInfo.innerHTML = `
+                    <p><strong>Khách hàng:</strong> ${
+                        document.getElementById("customerName").value
+                    }</p>
+                    <p><strong>Địa chỉ:</strong> ${
+                        document.getElementById("address").value
+                    }</p>
+                    <p><strong>Số điện thoại:</strong> ${
+                        document.getElementById("phone").value
+                    }</p>
+                `;
+
+                // Cập nhật bảng sản phẩm
+                const productList = document.getElementById("productList");
+                productList.innerHTML = "";
+                let subtotal = 0;
+                let totalQty = 0;
+
+                products.forEach((product, index) => {
+                    const row = productList.insertRow();
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${product.name}</td>
+                        <td>${product.quantity}</td>
+                        <td>${product.price.toLocaleString()}đ</td>
+                        <td>${product.total.toLocaleString()}đ</td>
+                    `;
+                    subtotal += product.total;
+                    totalQty += product.quantity;
+                });
+
+                // Lấy phí ship và chiết khấu
+                const shippingFee =
+                    parseFloat(document.getElementById("shippingFee").value) ||
+                    0;
+                const discount =
+                    parseFloat(document.getElementById("discount").value) || 0;
+
+                // Tính tổng thanh toán
+                const grandTotal = subtotal + shippingFee - discount;
+
+                // Cập nhật thông tin tổng
+                document.getElementById("totalQuantity").textContent = totalQty;
+                document.getElementById("subtotal").textContent =
+                    subtotal.toLocaleString() + "đ";
+                document.getElementById("shipping").textContent =
+                    shippingFee.toLocaleString() + "đ";
+                document.getElementById("discountDisplay").textContent =
+                    discount.toLocaleString() + "đ";
+                document.getElementById("totalAmount").textContent =
+                    grandTotal.toLocaleString() + "đ";
+
+                // Cập nhật số tiền bằng chữ
+                document.getElementById("moneyInWords").textContent =
+                    "Bằng chữ: " + numberToWords(grandTotal);
+            }
+
+            function clearProductInputs() {
+                document.getElementById("productName").value = "";
+                document.getElementById("quantity").value = "";
+                document.getElementById("price").value = "";
+            }
+
+            function exportToJPG() {
+                // Thiết lập các tùy chọn cho html2canvas
+                const options = {
+                    scale: 2, // Tăng độ phân giải để hình ảnh rõ nét hơn
+                    useCORS: true, // Cho phép tải tài nguyên từ các domain khác
+                    backgroundColor: "#ffffff", // Đặt màu nền trắng
+                    logging: false, // Tắt log
+                    allowTaint: true, // Cho phép vẽ hình ảnh từ các nguồn khác
+                };
+
+                // Chuyển đổi phần tử HTML thành canvas
+                html2canvas(document.getElementById("invoice"), options)
+                    .then((canvas) => {
+                        // Lấy dữ liệu URL hình ảnh từ canvas
+                        const imgData = canvas.toDataURL("image/jpeg", 1.0);
+
+                        // Tạo thẻ link ẩn để tải file
+                        const link = document.createElement("a");
+                        link.href = imgData;
+                        link.download = `hoa-don-${
+                            document.getElementById("invoiceNumber").value
+                        }.jpg`;
+
+                        // Hiển thị preview hình ảnh
+                        const imageOutput =
+                            document.getElementById("imageOutput");
+                        imageOutput.src = imgData;
+                        imageOutput.style.display = "block";
+
+                        // Tự động click để tải xuống
+                        link.click();
+                    })
+                    .catch((err) => {
+                        console.error("Có lỗi khi tạo hình ảnh: ", err);
+                        alert("Có lỗi khi tạo hình ảnh. Vui lòng thử lại!");
+                    });
+            }
+        </script>
+    </body>
+</html>
