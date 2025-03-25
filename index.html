@@ -76,6 +76,7 @@
                 border-collapse: collapse;
                 margin: 15px 0;
                 background: white;
+                table-layout: fixed;
             }
 
             th {
@@ -84,12 +85,27 @@
                 padding: 8px;
                 text-align: left;
                 font-size: 14px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             td {
                 padding: 8px;
                 border-bottom: 1px solid #ddd;
                 font-size: 14px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .product-name-cell {
+                white-space: normal;
+                overflow: visible;
+            }
+
+            .number-cell {
+                text-align: right;
             }
 
             .totals {
@@ -370,9 +386,15 @@
                             <tr>
                                 <th style="width: 5%">STT</th>
                                 <th style="width: 45%">Tên sản phẩm</th>
-                                <th style="width: 15%">Số lượng</th>
-                                <th style="width: 15%">Đơn giá</th>
-                                <th style="width: 20%">Thành tiền</th>
+                                <th style="width: 15%; text-align: right">
+                                    Số lượng
+                                </th>
+                                <th style="width: 15%; text-align: right">
+                                    Đơn giá
+                                </th>
+                                <th style="width: 20%; text-align: right">
+                                    Thành tiền
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="productList"></tbody>
@@ -611,11 +633,11 @@
                 products.forEach((product, index) => {
                     const row = productList.insertRow();
                     row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${product.name}</td>
-                        <td>${product.quantity}</td>
-                        <td>${product.price.toLocaleString()}đ</td>
-                        <td>${product.total.toLocaleString()}đ</td>
+                        <td style="text-align: center;">${index + 1}</td>
+                        <td class="product-name-cell">${product.name}</td>
+                        <td class="number-cell">${product.quantity}</td>
+                        <td class="number-cell">${product.price.toLocaleString()}đ</td>
+                        <td class="number-cell">${product.total.toLocaleString()}đ</td>
                     `;
                     subtotal += product.total;
                     totalQty += product.quantity;
