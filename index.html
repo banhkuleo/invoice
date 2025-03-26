@@ -327,6 +327,8 @@
                 max-width: 100%;
                 margin-top: 20px;
                 border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             }
 
             .preview-area {
@@ -399,9 +401,10 @@
                     font-size: 12px;
                 }
 
-                /* Ẩn preview trên mobile */
+                /* Hiển thị preview trên mobile thay vì ẩn nó */
                 .preview-area {
-                    display: none;
+                    display: block;
+                    margin-top: 15px;
                 }
             }
 
@@ -806,11 +809,6 @@
                 const today = new Date().toISOString().split("T")[0];
                 document.getElementById("invoiceDate").value = today;
                 updateInvoiceDisplay();
-
-                // Thêm nút xem trước cho mobile
-                if (window.innerWidth <= 768) {
-                    addPreviewButton();
-                }
             };
 
             function generateInvoiceNumber() {
@@ -996,12 +994,7 @@
                         // Khôi phục kích thước gốc
                         invoice.style.width = originalWidth;
 
-                        // Hiển thị preview trên mobile
-                        if (window.innerWidth <= 768) {
-                            showMobilePreview(imgData);
-                        }
-
-                        // Hiển thị preview trên desktop
+                        // Hiển thị preview trên tất cả thiết bị
                         const imageOutput =
                             document.getElementById("imageOutput");
                         imageOutput.src = imgData;
@@ -1024,27 +1017,6 @@
                         console.error("Có lỗi khi tạo hình ảnh: ", err);
                         alert("Có lỗi khi tạo hình ảnh. Vui lòng thử lại!");
                     });
-            }
-
-            function addPreviewButton() {
-                const container = document.querySelector(".invoice-container");
-                const previewBtn = document.createElement("button");
-                previewBtn.className = "preview-btn";
-                previewBtn.textContent = "Xem trước";
-                previewBtn.onclick = () => {
-                    const invoice = document.getElementById("invoice");
-                    html2canvas(invoice, {
-                        scale: 2,
-                        useCORS: true,
-                        backgroundColor: "#ffffff",
-                        logging: false,
-                        allowTaint: true,
-                    }).then((canvas) => {
-                        const imgData = canvas.toDataURL("image/jpeg", 1.0);
-                        showMobilePreview(imgData);
-                    });
-                };
-                container.insertBefore(previewBtn, container.firstChild);
             }
 
             // Thêm hàm để xóa form
