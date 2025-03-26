@@ -90,6 +90,19 @@
                 .form-grid {
                     grid-template-columns: 1fr;
                 }
+
+                .payment-info {
+                    padding: 10px;
+                    width: 80%;
+                }
+
+                .payment-info .bank-title {
+                    font-size: 12px;
+                }
+
+                .payment-info p {
+                    font-size: 11px;
+                }
             }
 
             .form-group {
@@ -240,47 +253,36 @@
 
             .invoice-header {
                 display: flex;
-                justify-content: space-between;
-                align-items: start;
+                justify-content: center;
+                align-items: center;
                 margin-bottom: 15px;
                 padding-bottom: 10px;
                 border-bottom: 1px solid var(--gray-light);
             }
 
-            .company-info {
-                text-align: right;
+            .payment-info {
+                text-align: center;
+                padding: 15px;
+                border: 1px dashed var(--gray-light);
+                border-radius: 8px;
+                background-color: var(--gray-light);
+                display: inline-block;
             }
 
-            .company-info h2 {
-                font-size: 20px;
-                margin: 0 0 5px 0;
-                letter-spacing: 0.5px;
-            }
-
-            .company-info p {
-                font-size: 12px;
-                margin: 2px 0;
-                color: var(--gray-dark);
-            }
-
-            .bank-info {
-                text-align: right;
-                margin-top: 8px;
-                padding-top: 8px;
-                border-top: 1px dashed var(--gray-light);
-            }
-
-            .bank-info .bank-title {
+            .payment-info .bank-title {
                 font-weight: bold;
                 color: var(--primary-color);
-                margin-bottom: 3px;
-                font-size: 12px;
+                margin-bottom: 5px;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                font-family: "Lexend", sans-serif;
             }
 
-            .bank-info p {
-                font-size: 12px;
-                margin: 2px 0;
-                color: var(--gray-dark);
+            .payment-info p {
+                font-size: 13px;
+                margin: 3px 0;
+                color: var(--primary-color);
             }
 
             .invoice-title {
@@ -351,15 +353,6 @@
                 .invoice {
                     padding: 10px;
                     font-size: 12px;
-                }
-
-                .company-info h2 {
-                    font-size: 18px;
-                }
-
-                .company-info p,
-                .bank-info p {
-                    font-size: 11px;
                 }
 
                 .invoice-title {
@@ -611,22 +604,11 @@
             <div class="invoice-container">
                 <div id="invoice" class="invoice">
                     <div class="invoice-header">
-                        <div>
-                            <!-- Ảnh logo có thể thêm vào đây nếu cần -->
-                        </div>
-                        <div class="company-info">
-                            <h2>CÔNG TY TNHH ABC</h2>
-                            <p>123 Đường ABC, Quận XYZ</p>
-                            <p>ĐT: 0123456789</p>
-
-                            <div class="bank-info">
-                                <div class="bank-title">
-                                    THÔNG TIN THANH TOÁN
-                                </div>
-                                <p>Ngân hàng: VIETCOMBANK</p>
-                                <p>STK: 1234567890</p>
-                                <p>Chủ TK: CÔNG TY TNHH ABC</p>
-                            </div>
+                        <div class="payment-info">
+                            <div class="bank-title">THÔNG TIN THANH TOÁN</div>
+                            <p>Ngân hàng: Ngân Hàng Á Châu (ACB)</p>
+                            <p>STK: 21030368</p>
+                            <p>Chủ TK: PHAN THI YEN NHI</p>
                         </div>
                     </div>
 
